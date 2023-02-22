@@ -7,11 +7,24 @@ contract stakecontract{
 
     mapping(address => uint256) public amountstaked;
     uint256 stakestart;
-    uint256 stakestop; 
+    // uint256 stakestop;
+    uint256 price = 0.000000000000001 ether;
+    uint256 numberoftokens;
+    address private Owner;
+
+
     Token public t1;
     constructor (address _token){
         t1 = Token(_token);
+        Owner = msg.sender;
     }
+
+    function buyTokens() public payable {
+        require(msg.value != 0 ether, "Invalid Input");
+        numberoftokens = msg.value * price;
+        t1.transferFrom(Owner,msg.sender,numberoftokens);     
+
+    }  
 
     function stake(uint256 tokenstostake) public {  //stake function that takes a uint
         require(t1.balanceOf(msg.sender) >= tokenstostake, "Not enough tokens"); //check if the user has enough tokens than what he's trying to stake
@@ -37,6 +50,8 @@ contract stakecontract{
         reward *= difftime;  //Multiply the reward by the time at stake
         return reward;
     }
+}
+
 
 
     // functions to implement
@@ -46,5 +61,3 @@ contract stakecontract{
     // Errors to fix 
     // 1) The reward is generated 0 for anyone that stakes less than 1000 tokens since I'm taking 0.01% of the total amount staked 
     // 2) The more tokens you stake the Reward is generated too fast
-
-}
