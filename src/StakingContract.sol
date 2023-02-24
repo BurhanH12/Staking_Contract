@@ -9,19 +9,23 @@ contract stakecontract{
     uint256 stakestart;
     // uint256 stakestop;
     uint256 price = 0.000000000000001 ether;
-    uint256 numberoftokens;
+    uint256 public numberoftokens;
     address private Owner;
+    uint256 time;
 
 
     Token public t1;
-    constructor (address _token){
+    constructor (address _token, uint256 _time){
         t1 = Token(_token);
         Owner = msg.sender;
+        time = _time;
+
     }
 
     function buyTokens() public payable {
         require(msg.value != 0 ether, "Invalid Input");
         numberoftokens = msg.value * price;
+        numberoftokens = numberoftokens / 1000000000000000000;
         t1.transferFrom(Owner,msg.sender,numberoftokens);     
 
     }  
@@ -47,17 +51,8 @@ contract stakecontract{
         uint256 stakedTokens = amountstaked[staker];   //to save the amount staked in a variable
         uint256 reward = stakedTokens / 1000; //take 0.01% of the total amount staked
         uint256 difftime =  block.timestamp - stakestart; //calculate the time the tokens were at stake
+        difftime = difftime / time;
         reward *= difftime;  //Multiply the reward by the time at stake
         return reward;
     }
 }
-
-
-
-    // functions to implement
-    // 1) Buy
-    // 2) Sell
-    
-    // Errors to fix 
-    // 1) The reward is generated 0 for anyone that stakes less than 1000 tokens since I'm taking 0.01% of the total amount staked 
-    // 2) The more tokens you stake the Reward is generated too fast
