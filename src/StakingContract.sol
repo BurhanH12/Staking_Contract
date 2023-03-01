@@ -32,7 +32,7 @@ contract stakecontract{
 
     function stake(uint256 tokenstostake) public {  //stake function that takes a uint
         require(t1.balanceOf(msg.sender) >= tokenstostake, "Not enough tokens"); //check if the user has enough tokens than what he's trying to stake
-        require(tokenstostake > 0, "cannot stake 0 tokens"); //Check if the user is not staking 0 tokens
+        // require(tokenstostake > 0, "cannot stake 0 tokens"); //Check if the user is not staking 0 tokens
         require(amountstaked[msg.sender] == 0, "You already have tokens staked");
         t1.transferFrom(msg.sender, address(this), tokenstostake); //transfer the tokens from the user to contract
         stakestart = block.timestamp;   //to take the time the user stakes his tokens
@@ -42,8 +42,7 @@ contract stakecontract{
     function unstake(uint256 tokenstounstake) public{
         require(tokenstounstake <= amountstaked[(msg.sender)], "You cannot unstake more tokens than what you have staked"); //user cannot unstake more than what's at stake
         uint256 reward = calculateReward(msg.sender);
-        require(amountstaked[msg.sender] >= tokenstounstake + reward, "You do not have enough tokens staked to unstake the requested amount");
-        amountstaked[msg.sender] -= tokenstounstake + reward;
+        amountstaked[msg.sender] -= tokenstounstake;
         t1.transfer(msg.sender,tokenstounstake + reward); //transfer the tokens + reward to the user
     }
 

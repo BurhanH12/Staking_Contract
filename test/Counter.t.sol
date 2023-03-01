@@ -22,7 +22,6 @@ contract TestStakeContract is Test {
 
     function testStake(uint16 amount) public {
         // Stake some tokens for an account
-        // t1.transfer(address(stc), 1000);
         stc.stake(amount);
         
         // Check the amount of tokens staked for the account
@@ -30,13 +29,13 @@ contract TestStakeContract is Test {
         assertEq(amountStaked,amount);
     }
 
-    function testReward() public {
-        stc.stake(1000);
+    function testReward(uint16 amount) public {
+        stc.stake(amount);
         uint256 reward = STAKE_AMOUNT / 1000;
         uint256 difftime =  block.timestamp - staticTime;
         uint256 expectedreward = reward *= (difftime);
         uint256 actualreward = stc.calculateReward(address(this));
-        vm.warp(block.timestamp + 500);
+        vm.warp(block.timestamp + 89600);
         assertEq(expectedreward,actualreward);
 
         
